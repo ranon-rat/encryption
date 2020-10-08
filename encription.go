@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -39,13 +37,11 @@ func resolveCesar(character string, seed int) string { //cifrade ceaser
 	for q := 0; q < len(qwerty); q++ {
 		if qwerty[q] == character {
 			for q < s {
-
 				if q == 0 {
-					s--
+					s = s - 1
 				} else {
 					s -= q
 				}
-
 			}
 			characterDes = qwerty[q-s]
 		}
@@ -53,7 +49,7 @@ func resolveCesar(character string, seed int) string { //cifrade ceaser
 	return characterDes
 }
 func (e *encriptado) enAndDes(character string, seed int) {
-	fmt.Print(character)
+
 	encript += cesar(character, seed)
 	m := strings.Split(encript, "")
 	resolve += resolveCesar(m[len(m)-1], seed)
@@ -62,11 +58,9 @@ func (e *encriptado) codeCon(text string, contraseña string) {
 	t = strings.Split(text, "")
 	c = strings.Split(contraseña, "")
 	x := 0
-
 	for x < len(text)%len(c) { //password
-
-		for y := 0; y < len(qwerty); y++ { // qwerty for return
-			for _, i := range t { //text
+		for _, i := range t { //text
+			for y := 0; y < len(qwerty); y++ { // qwerty for return
 				if c[x%len(c)] == qwerty[y] {
 					e.enAndDes(i, y)
 				}
@@ -79,31 +73,33 @@ func (e *encriptado) codeCon(text string, contraseña string) {
 			e.resolveList = append(e.resolveList, resolve)
 			resolve = ""
 			encript = ""
+			x++
 		}
-		x++
+
 	}
 }
-func (e *encriptado) unique() {
-	///////////////////////////////////////FOR NOT REPEAT A VALUES///////////////////////////////////////////////
-	occured := map[string]bool{}
 
-	for _, eS := range e.encriptList {
+func unique(text []string) []string {
+	occured := map[string]bool{}
+	t := []string{}
+	for _, eS := range text {
 		if occured[eS] != true {
 			occured[eS] = true
-			e.encriptList = append(e.encriptList, eS)
+			t = append(t, eS)
 
 		}
 	}
+	return t
 
 }
 
 func main() {
 
 	e := encriptado{}
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
-	text = strings.Replace(text, "\n", "", -1)
-	e.codeCon(text, "aleluya puta 1aasserasddeinalsdeszasxdcfvgbvfcdxsdcfvbghnbgvfbgmxiiasetodas")
-	fmt.Println(e.encriptList)
-	fmt.Println(e.resolveList)
+	m := strings.Join(qwerty, " ")
+	fmt.Println(m)
+	e.codeCon(m, "pato asado ")
+	fmt.Println(unique(e.encriptList))
+	fmt.Println(unique(e.resolveList))
+
 }
