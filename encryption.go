@@ -30,23 +30,22 @@ func (e *encriptado) enAndDes(character string, seed int) {
 func (e *encriptado) codeCon(text string, patron string) {
 	t = strings.Split(text, "")
 	c = strings.Split(patron, "")
+	x := 0
 
-	for Y, y := range qwerty { // qwerty for return
-		for x := 0; x < len(c); x++ {
-			for _, i := range t { //text
-				if c[x] == y {
-					e.enAndDes(i, Y)
+	for x < len(c) { //password
+		for i := 0; i < len(t); i++ { //text
+			for y := 0; y < len(qwerty); y++ { // qwerty for return
+				if c[x] == qwerty[y] {
+					e.enAndDes(t[i], y)
 				}
-
 			}
 			e.encryptList = append(e.encryptList, encrypt)
 			e.resolveList = append(e.resolveList, resolve)
+			resolve = ""
+			encrypt = ""
 
 		}
-
-		resolve = ""
-		encrypt = ""
-
+		x++
 	}
 }
 
@@ -97,6 +96,6 @@ func main() {
 	password, _ := reader.ReadString('\n')
 	password = strings.Replace(password, "\n", "", -1)
 	e.codeCon(text, password)
-	fmt.Print(unique(e.encryptList))
+	fmt.Print(e.encryptList)
 	fmt.Println(e.resolveList)
 }
